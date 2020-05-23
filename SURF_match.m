@@ -5,7 +5,7 @@ img_size = [800,1200];
 Ia = imread(fullfile(img1)) ;
 Ia = rgb2gray(Ia);
 %Ia = imresize(Ia,img_size);
-Ia = imresize(Ia,.3);
+Ia = imresize(Ia,.6);
 Ib = imread(fullfile(img2)) ;
 Ib = rgb2gray(Ib);
 %Ib = imresize(Ib, img_size);
@@ -46,7 +46,7 @@ showMatchedFeatures(Ia, Ib, Matched_P_a, ...
 title('Putatively Matched Points (Including Outliers)');
 
 [tform, inlier_points_a, inlier_points_b] = ...
-    estimateGeometricTransform(Matched_P_a, Matched_P_b, 'affine');
+    estimateGeometricTransform(Matched_P_a, Matched_P_b, 'affine', 'MaxNumTrials' ,2000, 'MaxDistance', 10);
 
 figure;
 showMatchedFeatures(Ia, Ib, inlier_points_a, ...
