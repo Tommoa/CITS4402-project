@@ -1,0 +1,43 @@
+function search_scene(ref_img_struct, scene_img)
+
+skip_once_found = true;
+
+Sc_FPoints = detectSURFFeatures(scene_img);
+[SC_Feats, Sc_FPoints] = extractFeatures(scene_img, Sc_FPoints);
+
+obj_stc = ref_img_struct.objects;
+
+for ii = 1:length(obj_stc)
+    found_obj = false;
+    num_orien = size(obj_stc(ii).images,1);
+    num_scales = size(obj_stc(ii).images,2);
+    for jj = 1:(num_orien * num_scales)
+        if (found_obj == false)
+            img_stc = obj_stc(ii).images(jj);
+            Pairs = matchFeatures(img_stc.Feats, SC_Feats);
+            Matched_P_im = img_stc.FPoints(Pairs(:, 1), :);
+            Matched_P_sc =      Sc_FPoints(Pairs(:, 2), :);
+
+            try
+                [tform, inlier_points_im, inlier_points_sc] = ...
+                    estimateGeometricTransform(Matched_P_im, Matched_P_sc, 'affine', 'MaxNumTrials' ,2000, 'MaxDistance', 10);
+                if (size(inlier_points_im,1) > 4 )
+                    found_obj = true;
+                    %break
+                    %remove this in a bit
+                    figure;
+                    img = imread(img_stc.name)
+                    showMatchedFeatures(img_stc, scene_img, inlier_points_im, inlier_points_sc, 'montage');
+                    title('Matched Points (Inliers Only)');
+                else
+                    fprintf('Not enough matching points found\n');
+                end
+            catch Err
+                fprintf('Object not found in scene\n');
+            end
+        end
+    end
+    if (found_obj == true)
+        fprintf('found %s\n',obj_stc(ii).obj_name);
+    end
+end

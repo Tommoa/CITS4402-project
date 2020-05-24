@@ -88,7 +88,11 @@ function read_in_training_imgs_Callback(hObject, eventdata, handles)
 
 selpath = uigetdir;
 
+set(handles.status_text,'String','loading training images...');
+
 handles.train_feats = read_in_training_dir(selpath);
+
+set(handles.status_text,'String','training images loaded');
 
 guidata(hObject,handles);
 
