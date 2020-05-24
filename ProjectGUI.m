@@ -22,7 +22,7 @@ function varargout = ProjectGUI(varargin)
 
 % Edit the above text to modify the response to help ProjectGUI
 
-% Last Modified by GUIDE v2.5 01-May-2020 22:48:56
+% Last Modified by GUIDE v2.5 24-May-2020 11:55:57
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -73,18 +73,24 @@ function varargout = ProjectGUI_OutputFcn(hObject, eventdata, handles)
 varargout{1} = handles.output;
 
 
-% --- Executes on button press in load_trained_model.
-function load_trained_model_Callback(hObject, eventdata, handles)
-% hObject    handle to load_trained_model (see GCBO)
+% --- Executes on button press in load_feature_struct.
+function load_feature_struct_Callback(hObject, eventdata, handles)
+% hObject    handle to load_feature_struct (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
 
-% --- Executes on button press in train_new_model.
-function train_new_model_Callback(hObject, eventdata, handles)
-% hObject    handle to train_new_model (see GCBO)
+% --- Executes on button press in read_in_training_imgs.
+function read_in_training_imgs_Callback(hObject, eventdata, handles)
+% hObject    handle to read_in_training_imgs (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
+
+selpath = uigetdir;
+
+handles.train_feats = read_in_training_dir(selpath);
+
+guidata(hObject,handles);
 
 
 % --- Executes on button press in SaveModel.
