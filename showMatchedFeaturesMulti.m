@@ -1,15 +1,15 @@
-function showMatchedFeaturesMulti(Scene_Image, Object_Images, matchedPointsScene, matchedPointsObjects, varargin)
+function showMatchedFeaturesMulti(Scene_Image, Object_Images, matchedPointsScene, matchedPointsObjects, object_scales, varargin)
 
 % credit to Mathworks for the vast majority of this function. adjustments
 % have been made to allow it to displayt multiple images
 %
 % see bottom of function for original documentation
 
-if nargin > 4
+if nargin > 5
     [varargin{:}] = convertStringsToChars(varargin{:});
 end
 
-narginchk(4,7);
+narginchk(5,8);
  
 %[matchedPoints1, matchedPoints2, method, lineSpec, hAxes] = ...
 %    parseInputs(I1, I2, matchedPoints1, matchedPoints2, varargin{:});
@@ -55,9 +55,14 @@ for ii = 1:num_objs
     offset1 = fliplr([0 0]);
     offset2 = fliplr([(ii-1)*each_obj_h 0]);
     offset2 = offset2 + fliplr([0 size(Scene_Image,2)]);
-
-    %scale obj points
-    matchedPoints2 = bsxfun(@rdivide, matchedPoints2, num_objs);
+    
+    %undo scale of image when finding surf points
+    scale = object_scales{ii};
+    matchedPoints2 = bsxfun(@rdivide, matchedPoints2, scale);
+    
+    % apply scale change from putting image in column
+    scale2 = size(I2,1)/size(I1,1)*num_objs;
+    matchedPoints2 = bsxfun(@rdivide, matchedPoints2, scale2);
     
     matchedPoints1 = bsxfun(@plus, matchedPoints1, offset1);
     matchedPoints2 = bsxfun(@plus, matchedPoints2, offset2);

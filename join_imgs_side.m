@@ -3,14 +3,18 @@ function joined_img = join_imgs_side(Scene_img, Object_Images)
     num_objs = length(Object_Images);
     obj_im = Object_Images;
     
-    for ii = 1:num_objs
-        obj_im{ii} = imresize(obj_im{ii},1/num_objs);
-    end
+    %for ii = 1:num_objs
+    %    obj_im{ii} = imresize(obj_im{ii},1/num_objs);
+    %end
     
     obj_col_img = [];
     for ii = 1:num_objs
         obj_col_img = [obj_col_img; obj_im{ii}];
     end
+    
+    scale = size(Scene_img,1) / size(obj_col_img,1);
+    
+    obj_col_img = imresize(obj_col_img, scale);
     
     padded_height = max(size(Scene_img,1), size(obj_col_img,1));
     

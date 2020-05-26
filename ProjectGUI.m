@@ -81,9 +81,9 @@ function load_feature_struct_Callback(hObject, eventdata, handles)
 
 [Feat_struct_name, Feat_struct_dir] = uigetfile('*.mat', 'Select feature structure .mat file');
 
-handles.train_feats = load(fullfile(Feat_struct_dir, Feat_struct_name));
+S = load(fullfile(Feat_struct_dir, Feat_struct_name), 'train_feats');
 
-handles.train_feats
+handles.train_feats = S.train_feats;
 
 guidata(hObject,handles);
 
@@ -163,6 +163,7 @@ jj = 1;
 found_images = {};
 all_sc_inlier_pts = {};
 all_obj_inlier_pts = {};
+all_obj_scales = {};
 
 for ii = 1:length(obj_stc)
     [found, inlier_points_im, inlier_points_sc, transform, ref_num] = ... 
@@ -180,14 +181,16 @@ for ii = 1:length(obj_stc)
         scale = obj_stc(ii).images(ref_num).scale;
         handles.objects_found_stc(jj).scale         = scale;
         
-        img = imresize(image, scale);
+        %img = imresize(image, scale);
+        img = image;
         found_images = [found_images {img}];
         all_sc_inlier_pts = [all_sc_inlier_pts {inlier_points_sc}];
         all_obj_inlier_pts = [all_obj_inlier_pts {inlier_points_im}];
+        all_obj_scales = [all_obj_scales {scale}];
         
         axes(handles.MainAxes);
         %showMatchedFeatures(img, handles.Scene_img, inlier_points_im, inlier_points_sc, 'montage')
-        showMatchedFeaturesMulti(handles.Scene_img, found_images, all_sc_inlier_pts, all_obj_inlier_pts)
+        showMatchedFeaturesMulti(handles.Scene_img, found_images, all_sc_inlier_pts, all_obj_inlier_pts, all_obj_scales);
 
         guidata(hObject,handles);
     end
