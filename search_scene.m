@@ -1,6 +1,8 @@
-function search_scene(ref_img_struct, scene_img)
+function search_scene(ref_img_struct, scene_img_colour)
 
 warning('off','all');
+
+scene_img = rgb2gray(scene_img_colour);
 
 skip_once_found = true;
 
@@ -28,16 +30,17 @@ for ii = 1:length(obj_stc)
                 %fprintf('Object not found in scene\n');
                 continue
             end
-            if (length(unique(inlier_points_sc.Location(:,1))) > 3 & length(unique(inlier_points_sc.Location(:,2))) > 3) 
+            if (length(Matched_P_im)* 0.2 < length(inlier_points_im) & length(unique(inlier_points_sc.Location(:,1))) > 3 & length(unique(inlier_points_sc.Location(:,2))) > 3)
+            %if (length(unique(inlier_points_sc.Location(:,1))) > 3 & length(unique(inlier_points_sc.Location(:,2))) > 3)
                 %fprintf('bigest dist between projected points = %3.2f\n', max(max(pdist2(inlier_points_sc.Location,inlier_points_sc.Location))));
                 found_obj = true;
                 %break
                 %remove this in a bit
                 figure;
-                img = rgb2gray(imread(img_stc.name));
+                img = imread(img_stc.name);
                 img = imresize(img, img_stc.scale);
                 %imshow(img);
-                showMatchedFeatures(img, scene_img, inlier_points_im, inlier_points_sc, 'montage');
+                showMatchedFeatures(img, scene_img_colour, inlier_points_im, inlier_points_sc, 'montage');
                 title('Matched Points (Inliers Only)');
             else
                 %fprintf('Not enough matching points found\n');
