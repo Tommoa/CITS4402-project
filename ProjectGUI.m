@@ -165,6 +165,8 @@ all_sc_inlier_pts = {};
 all_obj_inlier_pts = {};
 all_obj_scales = {};
 
+disp_str = "";
+
 for ii = 1:length(obj_stc)
     [found, inlier_points_im, inlier_points_sc, transform, ref_num] = ... 
         search_for_object(Sc_Feats, Sc_FPoints, obj_stc(ii));
@@ -191,10 +193,20 @@ for ii = 1:length(obj_stc)
         axes(handles.MainAxes);
         %showMatchedFeatures(img, handles.Scene_img, inlier_points_im, inlier_points_sc, 'montage')
         showMatchedFeaturesMulti(handles.Scene_img, found_images, all_sc_inlier_pts, all_obj_inlier_pts, all_obj_scales);
-
+        
+        disp_str = sprintf('%s found %s\n', disp_str, obj_stc(ii).obj_name);
+        
+        set(handles.status_text,'String',disp_str);
         guidata(hObject,handles);
+        drawnow();
     end
 end
+
+disp_str = sprintf('%s finished search\n', disp_str);
+        
+set(handles.status_text,'String',disp_str);
+guidata(hObject,handles);
+drawnow();
 
 % --- Executes on button press in lines_toggle.
 function lines_toggle_Callback(hObject, eventdata, handles)
