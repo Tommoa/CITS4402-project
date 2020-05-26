@@ -8,7 +8,7 @@ for ii = 3:length(tr_dir)
     s(ii-2).obj_name = tr_dir(ii).name;
     s(ii-2).images = [];
     for jj = 3:length(obj_dir)
-        im_struct = read_in_training_img(obj_dir(jj).name);
+        im_struct = read_in_training_img(fullfile(obj_dir(jj).folder, obj_dir(jj).name));
         s(ii-2).images = [s(ii-2).images ; im_struct];
     end 
 end

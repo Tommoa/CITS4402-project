@@ -1,4 +1,4 @@
-function [found, inlier_points_im, inlier_points_sc, tform, scale] = search_for_object(Sc_Feats, Sc_FPoints, Object_struct)
+function [found, inlier_points_im, inlier_points_sc, tform] = search_for_object(Sc_Feats, Sc_FPoints, Object_struct)
 
 warning('off','all');
 
@@ -24,11 +24,24 @@ for jj = 1:(num_orien * num_scales)
         % this stops the yoshi from showing, i don't think the 5 points displayed were all of the points
         if (length(Matched_P_im)* 0.2 < length(inlier_points_im) & length(unique(inlier_points_sc.Location(:,1))) > 3 & length(unique(inlier_points_sc.Location(:,2))) > 3)
         %if (length(unique(inlier_points_sc.Location(:,1))) > 3 & length(unique(inlier_points_sc.Location(:,2))) > 3)
-            scale = img_stc.scale;
+            %fprintf('bigest dist between projected points = %3.2f\n', max(max(pdist2(inlier_points_sc.Location,inlier_points_sc.Location))));
             found = true;
             return
+            %break
+            %remove this in a bit
+            %figure;
+            %img = imread(img_stc.name);
+            %img = imresize(img, img_stc.scale);
+            %imshow(img);
+            %showMatchedFeatures(img, scene_img_colour, inlier_points_im, inlier_points_sc, 'montage');
+            %title('Matched Points (Inliers Only)');
         else
-            % Not enough matching points found
+            %fprintf('Not enough matching points found\n');
         end
     end
 end
+%if (found == true)
+%    fprintf('found %s\n',Object_struct.obj_name);
+%else
+%    fprintf('%s not found\n',Object_struct.obj_name);
+%end

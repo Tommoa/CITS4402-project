@@ -79,6 +79,11 @@ function load_feature_struct_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
+[Feat_struct_name, Feat_struct_dir] = uigetfile({'*.mat'}, 'Select feature structure .mat file');
+
+handles.train_feats = load(fullfile(Feat_struct_dir, Feat_struct_name));
+
+guidata(hObject,handles);
 
 % --- Executes on button press in read_in_training_imgs.
 function read_in_training_imgs_Callback(hObject, eventdata, handles)
@@ -89,6 +94,7 @@ function read_in_training_imgs_Callback(hObject, eventdata, handles)
 selpath = uigetdir;
 
 set(handles.status_text,'String','loading training images...');
+guidata(hObject,handles);
 
 handles.train_feats = read_in_training_dir(selpath);
 
@@ -103,6 +109,11 @@ function SaveModel_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
+[file, path] = uiputfile;
+
+tr_feats = handles.train_feats;
+
+save(fullfile(path,file), 'tr_feats');
 
 % --- Executes on button press in load_other_model.
 function load_other_model_Callback(hObject, eventdata, handles)
@@ -117,6 +128,13 @@ function load_scene_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
+[Scene_img_name, Scene_img_dir] = uigetfile({'*.*'}, 'Select an image');  %User selects image file
+Scene_img_path = fullfile(Scene_img_dir,Scene_img_name);
+handles.Scene_img = imread(Scene_img_path);               %Read image from filepath
+axes(handles.MainAxes);                                 %link method to left axes
+imshow(handles.Scene_img);                               %load image of left axes
+
+guidata(hObject,handles);
 
 % --- Executes on button press in find_objects.
 function find_objects_Callback(hObject, eventdata, handles)
@@ -124,6 +142,36 @@ function find_objects_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
+warning('off','all');
+
+Sc_img_gr = rgb2gray(handles.Scene_img);
+Sc_FPoints = detectSURFFeatures(Sc_img_gr);
+[Sc_Feats, Sc_FPoints] = extractFeatures(Sc_img_gr, Sc_FPoints);
+
+ref_img_struct = handles.train_feats;
+
+obj_stc = ref_img_struct.objects;
+
+handles.objects_found_stc = [];
+handles.objects_point_mathes = struct;
+
+jj = 0;
+
+for ii = 1:length(obj_stc)
+    [found, inlier_points_im, inlier_points_sc, transform, image_scale] = ... 
+        search_for_object(Sc_Feats, Sc_FPoints, Object_struct);
+    if (found == true)
+        handles.objects_found_stc(jj).obj_name      = obj_stc(ii).obj_name;
+        handles.objects_found_stc(jj).inlier_pts_sc = inlier_points_sc;
+        handles.objects_found_stc(jj).inlier_pts_im = inlier_points_im;
+        handles.objects_found_stc(jj).tform         = transform;
+        handles.objects_found_stc(jj).scale         = image_scale;
+        
+        axes(handles.MainAxes);
+        showMatchedFeatures(img, scene_img_colour, inlier_points_im, inlier_points_sc, 'montage')
+        guidata(hObject,handles);
+    end
+end
 
 % --- Executes on button press in lines_toggle.
 function lines_toggle_Callback(hObject, eventdata, handles)

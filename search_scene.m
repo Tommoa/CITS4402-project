@@ -7,7 +7,7 @@ scene_img = rgb2gray(scene_img_colour);
 skip_once_found = true;
 
 Sc_FPoints = detectSURFFeatures(scene_img);
-[SC_Feats, Sc_FPoints] = extractFeatures(scene_img, Sc_FPoints);
+[Sc_Feats, Sc_FPoints] = extractFeatures(scene_img, Sc_FPoints);
 
 obj_stc = ref_img_struct.objects;
 
@@ -19,7 +19,7 @@ for ii = 1:length(obj_stc)
     for jj = 1:(num_orien * num_scales)
         if (found_obj == false)
             img_stc = obj_stc(ii).images(jj);
-            Pairs = matchFeatures(img_stc.Feats, SC_Feats);
+            Pairs = matchFeatures(img_stc.Feats, Sc_Feats);
             Matched_P_im = img_stc.FPoints(Pairs(:, 1), :);
             Matched_P_sc =      Sc_FPoints(Pairs(:, 2), :);
 
