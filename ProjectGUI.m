@@ -79,9 +79,11 @@ function load_feature_struct_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-[Feat_struct_name, Feat_struct_dir] = uigetfile({'*.mat'}, 'Select feature structure .mat file');
+[Feat_struct_name, Feat_struct_dir] = uigetfile('*.mat', 'Select feature structure .mat file');
 
 handles.train_feats = load(fullfile(Feat_struct_dir, Feat_struct_name));
+
+handles.train_feats
 
 guidata(hObject,handles);
 
@@ -95,6 +97,7 @@ selpath = uigetdir;
 
 set(handles.status_text,'String','loading training images...');
 guidata(hObject,handles);
+drawnow();
 
 handles.train_feats = read_in_training_dir(selpath);
 
@@ -111,9 +114,9 @@ function SaveModel_Callback(hObject, eventdata, handles)
 
 [file, path] = uiputfile;
 
-tr_feats = handles.train_feats;
+train_feats = handles.train_feats;
 
-save(fullfile(path,file), 'tr_feats');
+save(fullfile(path,file), 'train_feats');
 
 % --- Executes on button press in load_other_model.
 function load_other_model_Callback(hObject, eventdata, handles)
@@ -155,20 +158,37 @@ obj_stc = ref_img_struct.objects;
 handles.objects_found_stc = [];
 handles.objects_point_mathes = struct;
 
-jj = 0;
+jj = 1;
+
+found_images = {};
+all_sc_inlier_pts = {};
+all_obj_inlier_pts = {};
 
 for ii = 1:length(obj_stc)
-    [found, inlier_points_im, inlier_points_sc, transform, image_scale] = ... 
-        search_for_object(Sc_Feats, Sc_FPoints, Object_struct);
+    [found, inlier_points_im, inlier_points_sc, transform, ref_num] = ... 
+        search_for_object(Sc_Feats, Sc_FPoints, obj_stc(ii));
     if (found == true)
         handles.objects_found_stc(jj).obj_name      = obj_stc(ii).obj_name;
         handles.objects_found_stc(jj).inlier_pts_sc = inlier_points_sc;
         handles.objects_found_stc(jj).inlier_pts_im = inlier_points_im;
         handles.objects_found_stc(jj).tform         = transform;
-        handles.objects_found_stc(jj).scale         = image_scale;
+        handles.objects_found_stc(jj).ref_num       = ref_num;
+        
+        image = imread(obj_stc(ii).images(ref_num).name);
+        handles.objects_found_stc(jj).image         = image;
+        
+        scale = obj_stc(ii).images(ref_num).scale;
+        handles.objects_found_stc(jj).scale         = scale;
+        
+        img = imresize(image, scale);
+        found_images = [found_images {img}];
+        all_sc_inlier_pts = [all_sc_inlier_pts {inlier_points_sc}];
+        all_obj_inlier_pts = [all_obj_inlier_pts {inlier_points_im}];
         
         axes(handles.MainAxes);
-        showMatchedFeatures(img, scene_img_colour, inlier_points_im, inlier_points_sc, 'montage')
+        %showMatchedFeatures(img, handles.Scene_img, inlier_points_im, inlier_points_sc, 'montage')
+        showMatchedFeaturesMulti(handles.Scene_img, found_images, all_sc_inlier_pts, all_obj_inlier_pts)
+
         guidata(hObject,handles);
     end
 end

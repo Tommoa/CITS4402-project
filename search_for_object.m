@@ -1,8 +1,9 @@
-function [found, inlier_points_im, inlier_points_sc, tform, scale] = search_for_object(Sc_Feats, Sc_FPoints, Object_struct)
+function [found, inlier_points_im, inlier_points_sc, tform, reference_num] = search_for_object(Sc_Feats, Sc_FPoints, Object_struct)
 
 warning('off','all');
 
 found = false;
+reference_num = 1;
 
 num_orien = size(Object_struct.images,1);
 num_scales = size(Object_struct.images,2);
@@ -24,7 +25,7 @@ for jj = 1:(num_orien * num_scales)
         % this stops the yoshi from showing, i don't think the 5 points displayed were all of the points
         if (length(Matched_P_im)* 0.2 < length(inlier_points_im) & length(unique(inlier_points_sc.Location(:,1))) > 3 & length(unique(inlier_points_sc.Location(:,2))) > 3)
         %if (length(unique(inlier_points_sc.Location(:,1))) > 3 & length(unique(inlier_points_sc.Location(:,2))) > 3)
-            scale = img_stc.scale;
+            reference_num = jj;
             found = true;
             return
         else
