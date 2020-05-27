@@ -317,6 +317,7 @@ for each_diff = 1:length(handles.Scene_Img_Struct)
         all_sc_inlier_pts = {};
         all_obj_inlier_pts = {};
         all_obj_scales = {};
+        masks = {};
 
         disp_str = sprintf('Objects found:\n');
 
@@ -336,8 +337,11 @@ for each_diff = 1:length(handles.Scene_Img_Struct)
                 scale = obj_stc(ii).images(ref_num).scale;
                 handles.objects_found_stc(jj).scale         = scale;
 
+                mask = obj_stc(ii).images(ref_num).mask;
+
                 img = image;
                 found_images = [found_images {img}];
+                masks = [masks {mask}];
                 all_sc_inlier_pts = [all_sc_inlier_pts {inlier_points_sc}];
                 all_obj_inlier_pts = [all_obj_inlier_pts {inlier_points_im}];
                 all_obj_scales = [all_obj_scales {scale}];
@@ -349,10 +353,12 @@ for each_diff = 1:length(handles.Scene_Img_Struct)
                 imshow(imgOverlay);
                 hold 'on';
                 if(handles.show_lines == true)
-                    showMatchedFeaturesMulti(handles.Scene_img, found_images, all_sc_inlier_pts, all_obj_inlier_pts, all_obj_scales);
+                    showMatchedFeaturesMulti(handles.Scene_img, found_images, all_sc_inlier_pts, all_obj_inlier_pts, all_obj_scales, masks);
                 end
                 if(handles.show_outlines == true)
                     %
+                    figure
+                    imshow();
                 end
                 hold 'off';
 
