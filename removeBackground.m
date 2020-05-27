@@ -6,8 +6,9 @@ function removedMask = removeBackground(grayImage)
         error("removeBackground: grayImage isn't gray scale")
     end
 
+    gaussian = imgaussfilt(grayImage, rows*columns/200000);
     whiteBackground = (quantile(grayImage, 0.5, 'all') > mean(grayImage, 'all'));
-    filtered = imbinarize(grayImage, graythresh(grayImage));
+    filtered = imbinarize(gaussian, graythresh(gaussian));
     if whiteBackground
         filtered = ~filtered;
     end
