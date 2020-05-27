@@ -4,7 +4,7 @@ Very_difficult03,3D,Multi,Ruler
 Very_difficult04,Cards,Cheese
 Very_difficult05,Calander,Calc
 Very_difficult06,Micro,Wallet
-Very_difficult07,Bag,Mario
+Very_difficult07,CD,Bag,Mario
 Very_difficult08,Phone,Tape,Toy
 Very_difficult09,Bored,Mario
 Very_difficult10,Comb,Multi,Phone

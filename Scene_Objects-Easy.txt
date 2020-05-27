@@ -5,6 +5,6 @@ Easy04,Cheese,Disney,Phone
 Easy05,Calander,Multi,Toy
 Easy06,3D,Cards,Comb
 Easy07,Bored,Wallet
-Easy08,Tape
+Easy08,CD,Tape
 Easy09,Calc,Phone,Wallet
 Easy10,Bag,Toy

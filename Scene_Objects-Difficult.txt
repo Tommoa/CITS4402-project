@@ -5,6 +5,6 @@ Difficult04,Bag,Toy
 Difficult05,Calc,Micro
 Difficult06,Cards,Multi
 Difficult07,3D,Bored
-Difficult08,Calander,Tape
-Difficult09,Mario,Wallet
+Difficult08,Calander,CD,Tape
+Difficult09,CD,Mario,Wallet
 Difficult10,3D,Comb,Multi
