@@ -22,7 +22,7 @@ function varargout = ProjectGUI(varargin)
 
 % Edit the above text to modify the response to help ProjectGUI
 
-% Last Modified by GUIDE v2.5 24-May-2020 11:55:57
+% Last Modified by GUIDE v2.5 27-May-2020 10:50:15
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -85,7 +85,9 @@ S = load(fullfile(Feat_struct_dir, Feat_struct_name), 'train_feats');
 
 handles.train_feats = S.train_feats;
 
+set(handles.status_text,'String','loaded reference images data');
 guidata(hObject,handles);
+drawnow();
 
 % --- Executes on button press in read_in_training_imgs.
 function read_in_training_imgs_Callback(hObject, eventdata, handles)
@@ -118,12 +120,11 @@ train_feats = handles.train_feats;
 
 save(fullfile(path,file), 'train_feats');
 
-% --- Executes on button press in load_other_model.
-function load_other_model_Callback(hObject, eventdata, handles)
-% hObject    handle to load_other_model (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
+disp_str = sprintf('Model saved as "%s"', fullfile(path,file));
 
+set(handles.status_text,'String',disp_str);
+guidata(hObject,handles);
+drawnow();
 
 % --- Executes on button press in load_scene.
 function load_scene_Callback(hObject, eventdata, handles)
@@ -147,6 +148,10 @@ function find_objects_Callback(hObject, eventdata, handles)
 
 warning('off','all');
 
+set(handles.status_text,'String','Started search...');
+guidata(hObject,handles);
+drawnow();
+
 Sc_img_gr = rgb2gray(handles.Scene_img);
 Sc_FPoints = detectSURFFeatures(Sc_img_gr);
 [Sc_Feats, Sc_FPoints] = extractFeatures(Sc_img_gr, Sc_FPoints);
@@ -165,7 +170,7 @@ all_sc_inlier_pts = {};
 all_obj_inlier_pts = {};
 all_obj_scales = {};
 
-disp_str = "";
+disp_str = sprintf('Objects found:\n');
 
 for ii = 1:length(obj_stc)
     [found, inlier_points_im, inlier_points_sc, transform, ref_num] = ... 
@@ -183,7 +188,6 @@ for ii = 1:length(obj_stc)
         scale = obj_stc(ii).images(ref_num).scale;
         handles.objects_found_stc(jj).scale         = scale;
         
-        %img = imresize(image, scale);
         img = image;
         found_images = [found_images {img}];
         all_sc_inlier_pts = [all_sc_inlier_pts {inlier_points_sc}];
@@ -191,10 +195,20 @@ for ii = 1:length(obj_stc)
         all_obj_scales = [all_obj_scales {scale}];
         
         axes(handles.MainAxes);
-        %showMatchedFeatures(img, handles.Scene_img, inlier_points_im, inlier_points_sc, 'montage')
-        showMatchedFeaturesMulti(handles.Scene_img, found_images, all_sc_inlier_pts, all_obj_inlier_pts, all_obj_scales);
         
-        disp_str = sprintf('%s found %s\n', disp_str, obj_stc(ii).obj_name);
+        % always show images of object found if nothing else
+        imgOverlay = join_imgs_side(handles.Scene_img, found_images);
+        imshow(imgOverlay);
+        hold 'on';
+        if(handles.show_lines == true)
+            showMatchedFeaturesMulti(handles.Scene_img, found_images, all_sc_inlier_pts, all_obj_inlier_pts, all_obj_scales);
+        end
+        if(handles.show_outlines == true)
+            %
+        end
+        hold 'off';
+        
+        disp_str = sprintf('%s - %s\n', disp_str, obj_stc(ii).obj_name);
         
         set(handles.status_text,'String',disp_str);
         guidata(hObject,handles);
@@ -216,11 +230,36 @@ function lines_toggle_Callback(hObject, eventdata, handles)
 
 % Hint: get(hObject,'Value') returns toggle state of lines_toggle
 
+handles.show_lines = get(hObject,'Value');
+guidata(hObject,handles);
 
-% --- Executes on button press in checkbox2.
-function checkbox2_Callback(hObject, eventdata, handles)
-% hObject    handle to checkbox2 (see GCBO)
+% --- Executes on button press in outline_toggle.
+function outline_toggle_Callback(hObject, eventdata, handles)
+% hObject    handle to outline_toggle (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-% Hint: get(hObject,'Value') returns toggle state of checkbox2
+% Hint: get(hObject,'Value') returns toggle state of outline_toggle
+
+handles.show_outlines = get(hObject,'Value');
+guidata(hObject,handles);
+
+
+% --- Executes during object creation, after setting all properties.
+function lines_toggle_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to lines_toggle (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+handles.show_lines = get(hObject,'Value');
+guidata(hObject,handles);
+
+
+% --- Executes during object creation, after setting all properties.
+function outline_toggle_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to outline_toggle (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+handles.show_outlines = get(hObject,'Value');
+guidata(hObject,handles);

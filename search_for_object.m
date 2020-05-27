@@ -17,7 +17,7 @@ for jj = 1:(num_orien * num_scales)
 
         try
             [tform, inlier_points_im, inlier_points_sc] = ...
-                estimateGeometricTransform(Matched_P_im, Matched_P_sc, 'affine', 'MaxNumTrials' ,2000, 'MaxDistance', 10);
+                estimateGeometricTransform(Matched_P_im, Matched_P_sc, 'affine', 'MaxNumTrials' ,1000, 'MaxDistance', 7);
         catch Err
             %fprintf('Object not found in scene\n');
             continue

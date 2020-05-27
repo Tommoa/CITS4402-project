@@ -9,7 +9,17 @@ function joined_img = join_imgs_side(Scene_img, Object_Images)
     
     obj_col_img = [];
     for ii = 1:num_objs
-        obj_col_img = [obj_col_img; obj_im{ii}];
+        try
+            obj_col_img = [obj_col_img; obj_im{ii}];
+        catch
+            size(obj_col_img)
+            size(obj_im{ii})
+            figure;
+            imshow(obj_col_img);
+            figure;
+            imshow(obj_im{ii});
+            return;
+        end
     end
     
     scale = size(Scene_img,1) / size(obj_col_img,1);

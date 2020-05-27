@@ -10,33 +10,13 @@ if nargin > 5
 end
 
 narginchk(5,8);
- 
-%[matchedPoints1, matchedPoints2, method, lineSpec, hAxes] = ...
-%    parseInputs(I1, I2, matchedPoints1, matchedPoints2, varargin{:});
 
-imgOverlay = join_imgs_side(Scene_Image, Object_Images);
+%imgOverlay = join_imgs_side(Scene_Image, Object_Images);
 
-% pad the smaller image
-%paddedSize = [max(size(I1,1), size(I2,1)), max(size(I1,2), size(I2,2))];
-%I1pad = [paddedSize(1) - size(I1,1), paddedSize(2) - size(I1,2)];
-%I2pad = [paddedSize(1) - size(I2,1), paddedSize(2) - size(I2,2)];
-%I1pre = round(I1pad/2);
-%I2pre = round(I2pad/2);
-%I1 = padarray(I1, I1pre, 0, 'pre');
-%I2 = padarray(I2, I2pre, 0, 'pre');
-%I1 = padarray(I1, I1pad-I1pre, 0, 'post');
-%I2 = padarray(I2, I2pad-I2pre, 0, 'post');
+%imshow(imgOverlay);
+hold 'on';
 
-% Display the composite image
-%if nargout > 0
-%    hImage = imshow(imgOverlay, 'Parent', hAxes);
-%else
-    imshow(imgOverlay);%, 'Parent', hAxes);
-    hold 'on';
-%end
-
-%holdState = get(hAxes,'NextPlot'); % store the state for 'hold' before changing it
-%set(hAxes, 'NextPlot', 'add');
+colours = ['r','g','b','c','m','y','k','w']; 
 
 num_objs = length(Object_Images);
 each_obj_h = size(Scene_Image,1)/num_objs;
@@ -46,8 +26,15 @@ for ii = 1:num_objs
     I2 = Object_Images{ii};
     matchedPoints1 = matchedPointsScene{ii};
     matchedPoints2 = matchedPointsObjects{ii};
+    
+    colour = colours(1 + mod(ii-1, length(colours)));
+    
+    plot_opts{1} = [colour 'o'];
+    plot_opts{2} = [colour '+'];
+    plot_opts{3} = [colour '-'];
+    
     [matchedPoints1, matchedPoints2, method, lineSpec, hAxes] = ...
-        parseInputs(I1, I2, matchedPoints1, matchedPoints2, varargin{:});
+        parseInputs(I1, I2, matchedPoints1, matchedPoints2, 'PlotOptions',plot_opts);
     %============
     % Plot points
     %============
@@ -84,8 +71,6 @@ for ii = 1:num_objs
     lineY = [lineY; NaN(1,numPts/2)];
 
     plot(hAxes, lineX(:), lineY(:), lineSpec{3}); % line
-
-    %set(hAxes, 'NextPlot', holdState); % restore the hold state
 
     drawnow();
 end

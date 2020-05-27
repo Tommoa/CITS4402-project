@@ -1,6 +1,7 @@
 function Train_Feats = read_in_training_img(img_name)
 
-Scales = [1,0.75,0.5,0.25];
+%Scales = [1,0.75,0.5,0.25];
+Scales = [1,0.5];
 
 Im = imread(fullfile(img_name)) ;
 Im = rgb2gray(Im);
