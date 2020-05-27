@@ -1,0 +1,10 @@
+Difficult01,Highlighter,Disney
+Difficult02,Comb,Rotor
+Difficult03,Mario,Phone,Wallet
+Difficult04,Bag,Toy
+Difficult05,Calc,Micro
+Difficult06,Cards,Multi
+Difficult07,3D,Bored
+Difficult08,Calander,Tape
+Difficult09,Mario,Wallet
+Difficult10,3D,Comb,Multi
