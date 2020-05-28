@@ -22,13 +22,26 @@ for jj = 1:(num_orien * num_scales)
             %fprintf('Object not found in scene\n');
             continue
         end
-        num_unique = 3;
+        num_unique = 4;
         % this stops the yoshi from showing, i don't think the 5 points displayed were all of the points
         %if (length(Matched_P_im)* 0.5 < length(inlier_points_im) | (length(unique(inlier_points_sc.Location(:,1))) > num_unique & length(unique(inlier_points_sc.Location(:,2))) > num_unique))
         if (length(unique(inlier_points_sc.Location(:,1))) > num_unique & length(unique(inlier_points_sc.Location(:,2))) > num_unique)
-            reference_num = jj;
-            found = true;
-            return
+            x1 = unique(inlier_points_sc.Location(:,1));
+            x2 = unique(inlier_points_sc.Location(:,2));
+            for i = 2:length(x1)
+                d = sqrt((x1(1,1)-x1(i,1))^2+(x2(1,1)-x2(i,1))^2);
+                if(d>100 && d<3000)
+                    disp(d)
+                    disp(tform.T)
+                    reference_num = jj;
+                    found = true;
+                    return
+                end
+            end
+            
+%             reference_num = jj;
+%             found = true;
+%             return
         else
             % Not enough matching points found
         end
