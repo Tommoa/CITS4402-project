@@ -1,15 +1,15 @@
-function showMatchedFeaturesMulti(Scene_Image, Object_Images, matchedPointsScene, matchedPointsObjects, object_scales, masks, varargin)
+function showMatchedFeaturesMulti(Scene_Image, Object_Images, matchedPointsScene, matchedPointsObjects, object_scales, masks, transforms, varargin)
 
 % credit to Mathworks for the vast majority of this function. adjustments
 % have been made to allow it to displayt multiple images
 %
 % see bottom of function for original documentation
 
-if nargin > 6
+if nargin > 7
     [varargin{:}] = convertStringsToChars(varargin{:});
 end
 
-narginchk(6,9);
+narginchk(7,10);
 
 %imgOverlay = join_imgs_side(Scene_Image, Object_Images);
 
@@ -17,8 +17,6 @@ narginchk(6,9);
 hold 'on';
 
 colours = ['r','g','b','c','m','y','k','w'];
-rgbas = [ [1, 0, 0]; [0, 1, 0]; [0, 0, 1]; [0, 1, 1];...
-    [1, 0, 1]; [1, 1, 0]; [0, 0, 0]; [1, 1, 1] ]
 
 num_objs = length(Object_Images);
 each_obj_h = size(Scene_Image,1)/num_objs;
@@ -30,7 +28,6 @@ for ii = 1:num_objs
     matchedPoints2 = matchedPointsObjects{ii};
     
     colour = colours(1 + mod(ii-1, length(colours)));
-    rgba = rgbas(1 + mod(ii-1, length(colours)), :);
     
     plot_opts{1} = [colour 'o'];
     plot_opts{2} = [colour '+'];
@@ -56,6 +53,18 @@ for ii = 1:num_objs
     
     current_mask = bwboundaries(masks{ii});
     current_mask = current_mask{1};
+    current_mask = fliplr(current_mask);
+    % Test masks
+    test_mask = bwboundaries(imwarp(masks{ii}, transforms{ii}));
+    test_mask = test_mask{1};
+    test_mask = fliplr(test_mask);
+    %test_mask = bsxfun(@plus, test_mask, offset1);
+    p = patch(hAxes, test_mask(:, 1), test_mask(:, 2), colour);
+    p.FaceVertexAlphaData = 0.3;
+    p.FaceAlpha = 'flat';
+    
+    % For the training images
+    current_mask = bsxfun(@rdivide, current_mask, scale);
     current_mask = bsxfun(@rdivide, current_mask, scale2);
     current_mask = bsxfun(@plus, current_mask, offset2);
     p = patch(hAxes, current_mask(:, 1), current_mask(:, 2), colour);

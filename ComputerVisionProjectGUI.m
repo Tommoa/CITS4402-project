@@ -165,6 +165,8 @@ handles.objects_point_mathes = struct;
 
 jj = 1;
 
+transforms = {};
+masks = {};
 found_images = {};
 all_sc_inlier_pts = {};
 all_obj_inlier_pts = {};
@@ -187,8 +189,12 @@ for ii = 1:length(obj_stc)
         
         scale = obj_stc(ii).images(ref_num).scale;
         handles.objects_found_stc(jj).scale         = scale;
-        
+
+        mask = obj_stc(ii).images(ref_num).mask;
+
         img = image;
+        transforms = [transforms {transform}];
+        masks = [masks {mask}];
         found_images = [found_images {img}];
         all_sc_inlier_pts = [all_sc_inlier_pts {inlier_points_sc}];
         all_obj_inlier_pts = [all_obj_inlier_pts {inlier_points_im}];
@@ -201,7 +207,7 @@ for ii = 1:length(obj_stc)
         imshow(imgOverlay);
         hold 'on';
         if(handles.show_lines == true)
-            showMatchedFeaturesMulti(handles.Scene_img, found_images, all_sc_inlier_pts, all_obj_inlier_pts, all_obj_scales);
+            showMatchedFeaturesMulti(handles.Scene_img, found_images, all_sc_inlier_pts, all_obj_inlier_pts, all_obj_scales, masks, transforms);
         end
         if(handles.show_outlines == true)
             %
@@ -319,6 +325,7 @@ for each_diff = 1:length(handles.Scene_Img_Struct)
         all_obj_inlier_pts = {};
         all_obj_scales = {};
         masks = {};
+        transforms = {};
 
         disp_str = sprintf('Objects found:\n');
 
@@ -344,6 +351,7 @@ for each_diff = 1:length(handles.Scene_Img_Struct)
                 img = image;
                 found_images = [found_images {img}];
                 masks = [masks {mask}];
+                transforms = [transforms {transform}];
                 all_sc_inlier_pts = [all_sc_inlier_pts {inlier_points_sc}];
                 all_obj_inlier_pts = [all_obj_inlier_pts {inlier_points_im}];
                 all_obj_scales = [all_obj_scales {scale}];
@@ -355,12 +363,10 @@ for each_diff = 1:length(handles.Scene_Img_Struct)
                 imshow(imgOverlay);
                 hold 'on';
                 if(handles.show_lines == true)
-                    showMatchedFeaturesMulti(handles.Scene_img, found_images, all_sc_inlier_pts, all_obj_inlier_pts, all_obj_scales, masks);
+                    showMatchedFeaturesMulti(handles.Scene_img, found_images, all_sc_inlier_pts, all_obj_inlier_pts, all_obj_scales, masks, transforms);
                 end
                 if(handles.show_outlines == true)
                     %
-                    figure
-                    imshow();
                 end
                 hold 'off';
 
