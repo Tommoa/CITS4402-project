@@ -55,10 +55,10 @@ for ii = 1:num_objs
     current_mask = current_mask{1};
     current_mask = fliplr(current_mask);
     % Test masks
-    test_mask = bwboundaries(imwarp(masks{ii}, transforms{ii}));
-    test_mask = test_mask{1};
-    test_mask = fliplr(test_mask);
-    %test_mask = bsxfun(@plus, test_mask, offset1);
+    test_mask = bwboundaries(masks{ii});
+    test_mask = fliplr(test_mask{1});
+    test_mask = transformPointsForward(transforms{ii}, test_mask);
+    test_mask = bsxfun(@plus, test_mask, offset1);
     p = patch(hAxes, test_mask(:, 1), test_mask(:, 2), colour);
     p.FaceVertexAlphaData = 0.3;
     p.FaceAlpha = 'flat';
