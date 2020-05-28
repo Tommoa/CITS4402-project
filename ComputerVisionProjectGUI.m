@@ -293,7 +293,8 @@ for each_diff = 1:length(handles.Scene_Img_Struct)
     names = handles.Scene_Img_Struct(each_diff).im_names;
     for each_img = 1:length(images)
         handles.Scene_img = images{each_img};
-        LineOutput = {names{each_img}};
+        [pth,img_name,ext] = fileparts(names{each_img});
+        LineOutput = {img_name};
         
         %start modified version of isolate objects
         warning('off','all');
@@ -324,6 +325,7 @@ for each_diff = 1:length(handles.Scene_Img_Struct)
             [found, inlier_points_im, inlier_points_sc, transform, ref_num] = ... 
                 search_for_object(Sc_Feats, Sc_FPoints, obj_stc(ii));
             if (found == true)
+                LineOutput = [LineOutput, obj_stc(ii).obj_name];
                 handles.objects_found_stc(jj).obj_name      = obj_stc(ii).obj_name;
                 handles.objects_found_stc(jj).inlier_pts_sc = inlier_points_sc;
                 handles.objects_found_stc(jj).inlier_pts_im = inlier_points_im;
@@ -368,18 +370,20 @@ for each_diff = 1:length(handles.Scene_Img_Struct)
         set(handles.status_text,'String',disp_str);
         guidata(hObject,handles);
         drawnow();
-        LineOutput
-        DataOutput = [DataOutput; LineOutput];
+        LineOutput;
+        DataOutput = [DataOutput, {LineOutput}];
     end
-    EachDiffObjectsFound = [EachDiffObjectsFound; DataOutput];
+    EachDiffObjectsFound = [EachDiffObjectsFound; {DataOutput}];
     Difficulties = [Difficulties; difficulty];
 end
 
 disp_str = "";
 for ii = 1:length(EachDiffObjectsFound)
-    %[true_pos, total, false_pos] = JOSHUA'S FUNCTION( EachDiffObjectsFound{ii} );
-    temp = num2cell([20,25,3]);
-    [true_pos,total,false_pos] = deal(temp{:});
+    EachDiffObjectsFound{ii};
+    answerFile = sprintf('Scene_Objects-%s.txt',Difficulties{ii});
+    [true_pos, total, false_pos] = checkScore(EachDiffObjectsFound{ii}, answerFile);
+    %temp = num2cell([20,25,3]);
+    %[true_pos,total,false_pos] = deal(temp{:});
     
     disp_str = sprintf('%s %s: %i/%i correctly found. %i false positive search\n', disp_str, Difficulties{ii},true_pos, total, false_pos);   
 end
