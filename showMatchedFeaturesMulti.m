@@ -1,22 +1,24 @@
-function showMatchedFeaturesMulti(Scene_Image, Object_Images, matchedPointsScene, matchedPointsObjects, object_scales, varargin)
+function showMatchedFeaturesMulti(Scene_Image, Object_Images, matchedPointsScene, matchedPointsObjects, object_scales, masks, varargin)
 
 % credit to Mathworks for the vast majority of this function. adjustments
 % have been made to allow it to displayt multiple images
 %
 % see bottom of function for original documentation
 
-if nargin > 5
+if nargin > 6
     [varargin{:}] = convertStringsToChars(varargin{:});
 end
 
-narginchk(5,8);
+narginchk(6,9);
 
 %imgOverlay = join_imgs_side(Scene_Image, Object_Images);
 
 %imshow(imgOverlay);
 hold 'on';
 
-colours = ['r','g','b','c','m','y','k','w']; 
+colours = ['r','g','b','c','m','y','k','w'];
+rgbas = [ [1, 0, 0]; [0, 1, 0]; [0, 0, 1]; [0, 1, 1];...
+    [1, 0, 1]; [1, 1, 0]; [0, 0, 0]; [1, 1, 1] ]
 
 num_objs = length(Object_Images);
 each_obj_h = size(Scene_Image,1)/num_objs;
@@ -28,6 +30,7 @@ for ii = 1:num_objs
     matchedPoints2 = matchedPointsObjects{ii};
     
     colour = colours(1 + mod(ii-1, length(colours)));
+    rgba = rgbas(1 + mod(ii-1, length(colours)), :);
     
     plot_opts{1} = [colour 'o'];
     plot_opts{2} = [colour '+'];
@@ -51,6 +54,14 @@ for ii = 1:num_objs
     scale2 = size(I2,1)/size(I1,1)*num_objs;
     matchedPoints2 = bsxfun(@rdivide, matchedPoints2, scale2);
     
+    current_mask = bwboundaries(masks{ii});
+    current_mask = current_mask{1};
+    current_mask = bsxfun(@rdivide, current_mask, scale2);
+    current_mask = bsxfun(@plus, current_mask, offset2);
+    p = patch(hAxes, current_mask(:, 1), current_mask(:, 2), colour);
+    p.FaceVertexAlphaData = 0.3;
+    p.FaceAlpha = 'flat';
+
     matchedPoints1 = bsxfun(@plus, matchedPoints1, offset1);
     matchedPoints2 = bsxfun(@plus, matchedPoints2, offset2);
 
