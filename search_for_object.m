@@ -31,8 +31,6 @@ for jj = 1:(num_orien * num_scales)
             for i = 2:length(x1)
                 d = sqrt((x1(1,1)-x1(i,1))^2+(x2(1,1)-x2(i,1))^2);
                 if(d>100 && d<3000)
-                    disp(d)
-                    disp(tform.T)
                     reference_num = jj;
                     found = true;
                     return
