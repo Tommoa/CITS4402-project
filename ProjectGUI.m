@@ -170,6 +170,7 @@ all_sc_inlier_pts = {};
 all_obj_inlier_pts = {};
 all_obj_scales = {};
 masks = {};
+transforms = {};
 
 disp_str = sprintf('Objects found:\n');
 
@@ -191,6 +192,7 @@ for ii = 1:length(obj_stc)
         
         img = image;
         masks = [masks {obj_stc(ii).images(ref_num).mask}];
+        transforms = [transforms {transform}];
         found_images = [found_images {img}];
         all_sc_inlier_pts = [all_sc_inlier_pts {inlier_points_sc}];
         all_obj_inlier_pts = [all_obj_inlier_pts {inlier_points_im}];
@@ -203,7 +205,7 @@ for ii = 1:length(obj_stc)
         imshow(imgOverlay);
         hold 'on';
         if(handles.show_lines == true)
-            showMatchedFeaturesMulti(handles.Scene_img, found_images, all_sc_inlier_pts, all_obj_inlier_pts, all_obj_scales, masks);
+            showMatchedFeaturesMulti(handles.Scene_img, found_images, all_sc_inlier_pts, all_obj_inlier_pts, all_obj_scales, masks, transforms);
         end
         if(handles.show_outlines == true)
             %
