@@ -5,6 +5,9 @@ Scales = [1,0.5];
 
 Im = imread(fullfile(img_name)) ;
 Im = rgb2gray(Im);
+% If we don't remove the background from the image, we found that you would
+% very often end up with features that were not a part of the main object. As
+% such, we remove everything that's not in the mask from removeBackground
 fullmask = removeBackground(Im);
 Im = bsxfun(@times, Im, cast(fullmask, 'like', Im));
 
