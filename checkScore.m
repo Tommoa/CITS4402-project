@@ -4,6 +4,9 @@
 % [correct_num,correct_total,incorrect_num] = checkScore(results,answerfile)
 % %returns: correct_num=3 correct_total=5 incorrect_num=1
 
+% A function that returns the number of correctly identified objects, the
+% total number of objects, and number of incorrectly identified objects
+% in a scene.
 function [correct_num,correct_total,incorrect_num] = checkScore(results,answerfile)
     file = fopen(answerfile,'r');
     answers = {split(fgetl(file),',')'};

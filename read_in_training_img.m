@@ -1,3 +1,6 @@
+% A function that reads in a training image, removes the background from the
+% image, finds the SURF features in the image and loads relevant information
+% into a structure that is then returned.
 function Train_Feats = read_in_training_img(img_name)
 
 %Scales = [1,0.75,0.5,0.25];

@@ -1,3 +1,9 @@
+% A function to remove the background from an image with a single object.
+% This function uses a binary filter to determine the contrast between
+% the background and the foreground, and then uses a convex hull to ensure
+% that the object is fully encapsulated in the returned mask.
+% The returned mask, when multiplied with the original image, will turn the
+% background of an image black.
 function removedMask = removeBackground(grayImage)
 
     [rows, columns, channels] = size(grayImage);

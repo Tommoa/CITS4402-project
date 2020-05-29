@@ -1,9 +1,11 @@
-function showMatchedFeaturesMulti(Scene_Image, Object_Images, matchedPointsScene, matchedPointsObjects, object_scales, masks, transforms, varargin)
-
+% A function to show matched features in a scene and set of objects on an
+% image, and draw a coloured line between them.
+%
 % credit to Mathworks for the vast majority of this function. adjustments
-% have been made to allow it to displayt multiple images
+% have been made to allow it to display multiple images
 %
 % see bottom of function for original documentation
+function showMatchedFeaturesMulti(Scene_Image, Object_Images, matchedPointsScene, matchedPointsObjects, object_scales, masks, transforms, varargin)
 
 if nargin > 7
     [varargin{:}] = convertStringsToChars(varargin{:});
