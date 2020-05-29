@@ -1,3 +1,5 @@
+% A function that draws an object mask into a scene image given its mask,
+% scale and transform.
 function show_matched_masks(scene_image, object_images, masks, transforms, scales)
     colours = ['r','g','b','c','m','y','k','w'];
 

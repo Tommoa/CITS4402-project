@@ -1,3 +1,5 @@
+% A function that detects objects in a scene by extracting SURF features from
+% a scene image and comparing it to a number of reference images.
 function images = detect_objects(hObject, handles)
 
     set(handles.status_text,'String','Started search...');
@@ -24,10 +26,12 @@ function images = detect_objects(hObject, handles)
 
     disp_str = sprintf('Objects found:\n');
 
+    % For each reference object
     for ii = 1:length(obj_stc)
         [found, inlier_points_im, inlier_points_sc, transform, ref_num] = ... 
             search_for_object(Sc_Feats, Sc_FPoints, obj_stc(ii));
         if (found == true)
+            % We've found an object! Get the metadata...
             image = imread(obj_stc(ii).images(ref_num).name);
             scale = obj_stc(ii).images(ref_num).scale;
             mask = obj_stc(ii).images(ref_num).mask;
@@ -45,9 +49,11 @@ function images = detect_objects(hObject, handles)
             imshow(imgOverlay);
             hold 'on';
             if(handles.show_lines == true)
+                % Show the lines between features
                 showMatchedFeaturesMulti(handles.Scene_img, found_images, all_sc_inlier_pts, all_obj_inlier_pts, all_obj_scales, masks, transforms);
             end
             if(handles.show_outlines == true)
+                % Show the masks used in the reference images
                 show_matched_masks(handles.Scene_img, found_images, masks, transforms, all_obj_scales);
             end
             hold 'off';

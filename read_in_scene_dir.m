@@ -1,3 +1,5 @@
+% A function to read in a number of scenes with some given
+% difficulty and return a structure with all the relevant metadata
 function Scenes_Img_Struct = read_in_scene_dir(sc_dir_path)
 
 diff_dir = dir(sc_dir_path);
