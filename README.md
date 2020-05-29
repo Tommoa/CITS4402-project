@@ -28,8 +28,8 @@ scene images on a white background that take longer to process and run
 This project requires MATLAB in order to run, and requires that this git
 repository is in the PATH so that it can access the scripts needed to run.
 
-It also requires the following Add-On is installed:
--Computer Vision Toolbox
+It also requires the following MATLAB add-on is installed:
+- Computer Vision Toolbox
 
 When the GUI is first loaded, it will look like this:
 ![GUI picture](readme/gui.png)
