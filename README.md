@@ -6,6 +6,24 @@
 The aim of this project is to build an object recognition system in MATLAB
 to recognize and locate reference images in a cluttered scene.
 
+Object detection and location is done using SURF features to be able to detect
+objects present in these images with reasonable accuracy even with significant
+occlusion and clutter in the scene images. The example scenes and reference
+images in this repository are classified among three difficulty levels; easy,
+difficult and very difficult.
+
+Easy scene images are those with no occlusion of target objects. Difficult
+scenes are those some occlusion of target objects. Very difficult images
+typically have significant occlusion of target objects and clutter in the image.
+
+## Project structure
+There are a number of folders that are included as a part of this repository.
+- `quick_run_pics` is a folder that contains a small number of reference and
+scene images on a black background that can be quickly loaded and run
+- `full_set_pics` is a folder that contains a large number of reference and
+scene images on a white background that take longer to process and run
+- `readme` is a folder that contains pictures used in this README
+
 ## User guide
 This project requires MATLAB in order to run, and requires that this git
 repository is in the PATH so that it can access the scripts needed to run.
