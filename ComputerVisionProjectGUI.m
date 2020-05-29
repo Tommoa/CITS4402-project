@@ -226,9 +226,10 @@ for each_diff = 1:length(handles.Scene_Img_Struct)
      	
         % Returns the names of the images found
         FoundImages = detect_objects(hObject, handles); %#ok<NASGU>
-        DataOutput = [DataOutput; LineOutput]; %#ok<AGROW>
+        LineOutput = [LineOutput, FoundImages];
+        DataOutput = [DataOutput, {LineOutput}]; %#ok<AGROW>
     end
-    EachDiffObjectsFound = [EachDiffObjectsFound; DataOutput]; %#ok<AGROW>
+    EachDiffObjectsFound = [EachDiffObjectsFound; {DataOutput}]; %#ok<AGROW>
     Difficulties = [Difficulties; difficulty]; %#ok<AGROW>
 end
 
