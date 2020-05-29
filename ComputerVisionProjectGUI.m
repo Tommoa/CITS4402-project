@@ -81,9 +81,9 @@ function load_feature_struct_Callback(hObject, eventdata, handles)
 
 [Feat_struct_name, Feat_struct_dir] = uigetfile('*.mat', 'Select feature structure .mat file');
 
-S = load(fullfile(Feat_struct_dir, Feat_struct_name), 'train_feats');
+S = load(fullfile(Feat_struct_dir, Feat_struct_name));
 
-handles.train_feats = S.train_feats;
+handles.train_feats = S;
 
 set(handles.status_text,'String','loaded reference images data');
 guidata(hObject,handles);
@@ -114,11 +114,11 @@ function SaveModel_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-[file, path] = uiputfile;
+[file, path] = uiputfile('*.mat');
 
 train_feats = handles.train_feats;
 
-save(fullfile(path,file), 'train_feats');
+save(fullfile(path,file), '-struct', 'train_feats','-v7.3');
 
 disp_str = sprintf('Model saved as "%s"', fullfile(path,file));
 
@@ -160,8 +160,8 @@ ref_img_struct = handles.train_feats;
 
 obj_stc = ref_img_struct.objects;
 
-handles.objects_found_stc = [];
-handles.objects_point_mathes = struct;
+%handles.objects_found_stc = [];
+%handles.objects_point_mathes = struct;
 
 jj = 1;
 
@@ -178,17 +178,17 @@ for ii = 1:length(obj_stc)
     [found, inlier_points_im, inlier_points_sc, transform, ref_num] = ... 
         search_for_object(Sc_Feats, Sc_FPoints, obj_stc(ii));
     if (found == true)
-        handles.objects_found_stc(jj).obj_name      = obj_stc(ii).obj_name;
-        handles.objects_found_stc(jj).inlier_pts_sc = inlier_points_sc;
-        handles.objects_found_stc(jj).inlier_pts_im = inlier_points_im;
-        handles.objects_found_stc(jj).tform         = transform;
-        handles.objects_found_stc(jj).ref_num       = ref_num;
+        %handles.objects_found_stc(jj).obj_name      = obj_stc(ii).obj_name;
+        %handles.objects_found_stc(jj).inlier_pts_sc = inlier_points_sc;
+        %handles.objects_found_stc(jj).inlier_pts_im = inlier_points_im;
+        %handles.objects_found_stc(jj).tform         = transform;
+        %handles.objects_found_stc(jj).ref_num       = ref_num;
         
         image = imread(obj_stc(ii).images(ref_num).name);
-        handles.objects_found_stc(jj).image         = image;
+        %handles.objects_found_stc(jj).image         = image;
         
         scale = obj_stc(ii).images(ref_num).scale;
-        handles.objects_found_stc(jj).scale         = scale;
+        %handles.objects_found_stc(jj).scale         = scale;
 
         mask = obj_stc(ii).images(ref_num).mask;
 
@@ -315,8 +315,8 @@ for each_diff = 1:length(handles.Scene_Img_Struct)
 
         obj_stc = ref_img_struct.objects;
 
-        handles.objects_found_stc = [];
-        handles.objects_point_mathes = struct;
+        %handles.objects_found_stc = [];
+        %handles.objects_point_mathes = struct;
 
         jj = 1;
 
@@ -334,17 +334,17 @@ for each_diff = 1:length(handles.Scene_Img_Struct)
                 search_for_object(Sc_Feats, Sc_FPoints, obj_stc(ii));
             if (found == true)
                 LineOutput = [LineOutput, obj_stc(ii).obj_name];
-                handles.objects_found_stc(jj).obj_name      = obj_stc(ii).obj_name;
-                handles.objects_found_stc(jj).inlier_pts_sc = inlier_points_sc;
-                handles.objects_found_stc(jj).inlier_pts_im = inlier_points_im;
-                handles.objects_found_stc(jj).tform         = transform;
-                handles.objects_found_stc(jj).ref_num       = ref_num;
+                %handles.objects_found_stc(jj).obj_name      = obj_stc(ii).obj_name;
+                %handles.objects_found_stc(jj).inlier_pts_sc = inlier_points_sc;
+                %handles.objects_found_stc(jj).inlier_pts_im = inlier_points_im;
+                %handles.objects_found_stc(jj).tform         = transform;
+                %handles.objects_found_stc(jj).ref_num       = ref_num;
 
                 image = imread(obj_stc(ii).images(ref_num).name);
-                handles.objects_found_stc(jj).image         = image;
+                %handles.objects_found_stc(jj).image         = image;
 
                 scale = obj_stc(ii).images(ref_num).scale;
-                handles.objects_found_stc(jj).scale         = scale;
+                %handles.objects_found_stc(jj).scale         = scale;
 
                 mask = obj_stc(ii).images(ref_num).mask;
 
