@@ -51,26 +51,6 @@ for ii = 1:num_objs
     scale2 = size(I2,1)/size(I1,1)*num_objs;
     matchedPoints2 = bsxfun(@rdivide, matchedPoints2, scale2);
     
-    current_mask = bwboundaries(masks{ii});
-    current_mask = current_mask{1};
-    current_mask = fliplr(current_mask);
-    % Test masks
-    test_mask = bwboundaries(masks{ii});
-    test_mask = fliplr(test_mask{1});
-    test_mask = transformPointsForward(transforms{ii}, test_mask);
-    test_mask = bsxfun(@plus, test_mask, offset1);
-    p = patch(hAxes, test_mask(:, 1), test_mask(:, 2), colour);
-    p.FaceVertexAlphaData = 0.3;
-    p.FaceAlpha = 'flat';
-    
-    % For the training images
-    current_mask = bsxfun(@rdivide, current_mask, scale);
-    current_mask = bsxfun(@rdivide, current_mask, scale2);
-    current_mask = bsxfun(@plus, current_mask, offset2);
-    p = patch(hAxes, current_mask(:, 1), current_mask(:, 2), colour);
-    p.FaceVertexAlphaData = 0.3;
-    p.FaceAlpha = 'flat';
-
     matchedPoints1 = bsxfun(@plus, matchedPoints1, offset1);
     matchedPoints2 = bsxfun(@plus, matchedPoints2, offset2);
 
